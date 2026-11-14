@@ -40,8 +40,17 @@ jobs:
           done
           mkdir -p release
           ditto -c -k --sequesterRsrc --keepParent "$app" release/OpenInTerminal.zip
+          staging=$(mktemp -d)
+          trap 'rm -rf "$staging"' EXIT
+          ditto "$app" "$staging/OpenInTerminal.app"
+          ln -s /Applications "$staging/Applications"
+          hdiutil create -volname OpenInTerminal -srcfolder "$staging" \
+            -format UDZO -fs HFS+ release/OpenInTerminal.dmg
+          hdiutil verify release/OpenInTerminal.dmg
           cd release
-          shasum -a 256 OpenInTerminal.zip > OpenInTerminal.zip.sha256
+          for package in OpenInTerminal.dmg OpenInTerminal.zip; do
+            shasum -a 256 "$package" > "$package.sha256"
+          done
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: OpenInTerminal
@@ -66,7 +75,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          sha256sum --check OpenInTerminal.zip.sha256
-          gh release create "$GITHUB_REF_NAME" OpenInTerminal.zip OpenInTerminal.zip.sha256 \
+          sha256sum --check OpenInTerminal.dmg.sha256 OpenInTerminal.zip.sha256
+          gh release create "$GITHUB_REF_NAME" \
+            OpenInTerminal.dmg OpenInTerminal.dmg.sha256 OpenInTerminal.zip OpenInTerminal.zip.sha256 \
             --verify-tag --notes-from-tag \
             --title "OpenInTerminal $GITHUB_REF_NAME"
