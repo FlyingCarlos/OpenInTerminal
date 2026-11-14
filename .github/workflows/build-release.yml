@@ -55,6 +55,10 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref }}
+          persist-credentials: false
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: OpenInTerminal
@@ -64,5 +68,5 @@ jobs:
         run: |
           sha256sum --check OpenInTerminal.zip.sha256
           gh release create "$GITHUB_REF_NAME" OpenInTerminal.zip OpenInTerminal.zip.sha256 \
-            --repo "$GITHUB_REPOSITORY" --verify-tag --notes-from-tag \
+            --verify-tag --notes-from-tag \
             --title "OpenInTerminal $GITHUB_REF_NAME"
