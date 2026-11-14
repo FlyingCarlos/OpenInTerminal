@@ -12,6 +12,7 @@
 # Contents/Library/LoginItems and signed too, so "Launch at Login" works.
 #
 # Output: ./export/<App>.app
+# Pass --full-only to build just OpenInTerminal.
 #
 set -euo pipefail
 
@@ -29,6 +30,12 @@ TARGETS=(
   "OpenInTerminal-Lite:OpenInTerminal-Lite/OpenInTerminal-Lite/OpenInTerminal-Lite.entitlements"
   "OpenInEditor-Lite:OpenInEditor-Lite/OpenInEditor-Lite/OpenInEditor-Lite.entitlements"
 )
+
+case "${1:-}" in
+  --full-only) TARGETS=("${TARGETS[0]}") ;;
+  "") ;;
+  *) echo "Usage: $0 [--full-only]" >&2; exit 2 ;;
+esac
 
 # Ad-hoc sign an .app bundle strictly leaf-first so every inner signature is
 # sealed before the bundle that contains it:
@@ -64,8 +71,12 @@ for pair in "${TARGETS[@]}"; do
     -configuration "$CONFIG" \
     -derivedDataPath "$DERIVED" \
     -destination 'generic/platform=macOS' \
+    MACOSX_DEPLOYMENT_TARGET=12.0 \
+    ONLY_ACTIVE_ARCH=NO \
+    'ARCHS=arm64 x86_64' \
     CODE_SIGNING_ALLOWED=NO \
-    build >/dev/null
+    -onlyUsePackageVersionsFromResolvedFile \
+    build
 
   app="$PRODUCTS/$scheme.app"
 
@@ -77,10 +88,12 @@ for pair in "${TARGETS[@]}"; do
       rm -rf "$app/Contents/Library/LoginItems/$HELPER"
       cp -R "$PRODUCTS/$HELPER" "$app/Contents/Library/LoginItems/"
     else
-      echo "!! $HELPER not found in products; Launch-at-Login will be unavailable"
+      echo "$HELPER not found in build products" >&2
+      exit 1
     fi
   fi
 
+  cp LICENSE "$app/Contents/Resources/LICENSE.txt"
   echo "==> Ad-hoc signing $scheme.app"
   adhoc_sign "$app" "$ent"
   codesign --verify --deep --strict "$app"
