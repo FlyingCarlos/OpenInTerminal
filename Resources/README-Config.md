@@ -20,7 +20,9 @@ Prefer not to use the command line? Control-click (right-click) the app in Finde
 
 ## Finder Extension Configuration
 
-To enable Finder Extension, right click on Finder toolbar, select `Customize Toolbar...` as shown below:
+Drag the full `OpenInTerminal.app` into Applications and open it. On macOS 10.14 or later, the app checks whether the Finder extension is enabled the first time it runs. If prompted, choose **Open Extension Settings** and enable OpenInTerminal in macOS. If you choose **Later**, select **Set Up Finder Extension…** from OpenInTerminal’s menu bar menu. If macOS does not list the extension, use the manual steps below.
+
+To add the button to the Finder toolbar, right-click the toolbar and choose `Customize Toolbar...`:
 
 <div>
   <img src="https://github.com/user-attachments/assets/c834f0d1-2f9d-4200-984c-3f6330eaeb2d" width="400px">

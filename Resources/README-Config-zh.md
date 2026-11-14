@@ -20,7 +20,9 @@
 
 ## Finder 扩展配置
 
-要启用 Finder 扩展，请右键单击 Finder 工具栏，然后选择 自定义工具栏...，如下图所示：
+将完整版本的 `OpenInTerminal.app` 拖入「应用程序」文件夹并打开。macOS 10.14 或更新版本上，如果访达扩展尚未启用，首次启动时会显示提示。点击「打开扩展设置」，在系统界面中启用 OpenInTerminal。如果选择了「稍后」，可以从系统菜单栏中的 OpenInTerminal 菜单选择「设置访达扩展…」。如果系统界面没有列出扩展，可以使用下方的手动启用方法。
+
+要将按钮添加到访达工具栏，请右键单击工具栏并选择「自定义工具栏…」：
 
 <div>
   <img src="https://github.com/user-attachments/assets/c834f0d1-2f9d-4200-984c-3f6330eaeb2d" width="400px">

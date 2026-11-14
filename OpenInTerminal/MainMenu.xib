@@ -18,6 +18,7 @@
                 <outlet property="copyPathMenuItem" destination="qAr-jJ-wpJ" id="c6N-Ea-YRn"/>
                 <outlet property="defaultEditorMenuItem" destination="Zth-1M-1Lo" id="bw4-82-Mty"/>
                 <outlet property="defaultTerminalMenuItem" destination="bMb-Lp-IHe" id="bew-Bk-lA6"/>
+                <outlet property="finderExtensionMenuItem" destination="Xqd-HK-V0k" id="V0m-Ru-kQ6"/>
                 <outlet property="preferencesMenuItem" destination="UPk-SM-iWa" id="ca5-kt-bXJ"/>
                 <outlet property="quitMenuItem" destination="h2a-ug-O2T" id="hvL-68-064"/>
                 <outlet property="statusMenu" destination="Hp5-zS-8KF" id="0Nh-0E-UKl"/>
@@ -49,6 +50,12 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="s0I-d5-G8a"/>
+                <menuItem title="Set Up Finder Extension…" hidden="YES" id="Xqd-HK-V0k">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showFinderExtensionSetup:" target="xFr-z9-DsJ" id="L7m-Nb-fQx"/>
+                    </connections>
+                </menuItem>
                 <menuItem title="Preferences..." id="UPk-SM-iWa">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>

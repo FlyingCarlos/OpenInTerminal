@@ -19,6 +19,12 @@
 "menu.preferences" = "偏好设置...";
 "menu.quit" = "退出";
 
+"finder_setup.title" = "启用访达扩展";
+"finder_setup.description" = "在系统设置中启用 OpenInTerminal 扩展，即可在访达右键菜单中使用相关命令，并可将按钮添加到工具栏。";
+"finder_setup.open_settings" = "打开扩展设置";
+"finder_setup.later" = "稍后";
+"finder_setup.menu_item" = "设置访达扩展…";
+
 "pref.toolbar.not_installed" = "未安装";
 
 "alert.pick_terminal_title" = "打开?";

@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import FinderSync
 import OpenInTerminalCore
 import ShortcutRecorder
 
@@ -50,6 +51,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } catch {
             logw(error.localizedDescription)
         }
+
+        if #available(macOS 10.14, *) {
+            DispatchQueue.main.async {
+                self.offerFinderExtensionSetupOnFirstLaunch()
+            }
+        }
     }
     
     func applicationWillTerminate(_ notification: Notification) {
@@ -76,6 +83,42 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
     }
     
+}
+
+extension AppDelegate {
+
+    @available(macOS 10.14, *)
+    private func offerFinderExtensionSetupOnFirstLaunch() {
+        let setupKey = "FinderExtensionSetupShown"
+        guard !Defaults.bool(forKey: setupKey) else { return }
+        Defaults.set(true, forKey: setupKey)
+        if !FIFinderSyncController.isExtensionEnabled {
+            showFinderExtensionSetup()
+        }
+    }
+
+    @available(macOS 10.14, *)
+    func showFinderExtensionSetup() {
+        guard !FIFinderSyncController.isExtensionEnabled else { return }
+
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("finder_setup.title",
+                                               value: "Enable the Finder Extension",
+                                               comment: "Finder extension setup title")
+        alert.informativeText = NSLocalizedString("finder_setup.description",
+                                                   value: "Turn on the OpenInTerminal extension in System Settings to add commands to Finder’s shortcut menu and make its toolbar button available.",
+                                                   comment: "Instructions for enabling the Finder extension")
+        alert.addButton(withTitle: NSLocalizedString("finder_setup.open_settings",
+                                                      value: "Open Extension Settings",
+                                                      comment: "Open the macOS extension management interface"))
+        alert.addButton(withTitle: NSLocalizedString("finder_setup.later",
+                                                      value: "Later",
+                                                      comment: "Dismiss Finder extension setup"))
+        NSApp.activate(ignoringOtherApps: true)
+        if alert.runModal() == .alertFirstButtonReturn {
+            FIFinderSyncController.showExtensionManagementInterface()
+        }
+    }
 }
 
 extension AppDelegate {

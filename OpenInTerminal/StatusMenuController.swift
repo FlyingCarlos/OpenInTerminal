@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import FinderSync
 import OpenInTerminalCore
 import ShortcutRecorder
 
@@ -16,6 +17,7 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     @IBOutlet weak var defaultTerminalMenuItem: NSMenuItem!
     @IBOutlet weak var defaultEditorMenuItem: NSMenuItem!
     @IBOutlet weak var copyPathMenuItem: NSMenuItem!
+    @IBOutlet weak var finderExtensionMenuItem: NSMenuItem!
     @IBOutlet weak var preferencesMenuItem: NSMenuItem!
     @IBOutlet weak var quitMenuItem: NSMenuItem!
     
@@ -54,12 +56,18 @@ class StatusMenuController: NSObject, NSMenuDelegate {
         statusMenu.delegate = self
         
         copyPathMenuItem.title = NSLocalizedString("menu.copy_path_to_clipboard", comment: "Copy path to Clipboard")
+        finderExtensionMenuItem.title = NSLocalizedString("finder_setup.menu_item",
+                                                         value: "Set Up Finder Extension…",
+                                                         comment: "Menu item to open Finder extension setup")
         preferencesMenuItem.title = NSLocalizedString("menu.preferences", comment: "Preferences...")
         quitMenuItem.title = NSLocalizedString("menu.quit", comment: "Quit")
     }
     
     func menuWillOpen(_ menu: NSMenu) {
         setMenuItemTitle()
+        if #available(macOS 10.14, *) {
+            finderExtensionMenuItem.isHidden = FIFinderSyncController.isExtensionEnabled
+        }
         let menuItems: [(NSMenuItem, String)] =
             [(defaultTerminalMenuItem, Constants.Key.defaultTerminalShortcut),
              (defaultEditorMenuItem, Constants.Key.defaultEditorShortcut),
@@ -98,6 +106,12 @@ class StatusMenuController: NSObject, NSMenuDelegate {
     
     @IBAction func copyPathToClipboard(_ sender: NSMenuItem) {
         (NSApplication.shared.delegate as? AppDelegate)?.copyPathToClipboard()
+    }
+
+    @IBAction func showFinderExtensionSetup(_ sender: NSMenuItem) {
+        if #available(macOS 10.14, *) {
+            (NSApp.delegate as? AppDelegate)?.showFinderExtensionSetup()
+        }
     }
     
     @IBAction func showPreferences(_ sender: NSMenuItem) {
